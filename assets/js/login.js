@@ -40,7 +40,7 @@ $(function () {
         e.preventDefault();
         //发起ajax的post请求
         var data = { username: $("#form_reg [name=username]").val(), password: $("#form_reg [name=password]").val() };
-        $.post("http://api-breakingnews-web.itheima.net/api/reguser", data, function (res) {
+        $.post("/api/reguser", data, function (res) {
             if (res.status !== 0) {
                 return layer.msg("注册失败，原因：" + res.message);
             }
@@ -51,11 +51,11 @@ $(function () {
 
 
     //监听登录表单的提交事件
-    $("#form_login").on("submit", function (e) {
+    $("#form_login").submit(function (e) {
         var layer = layui.layer;//调用layui的提示框组件
         e.preventDefault();//禁止表单默认提交事件
         $.ajax({
-            url: "http://api-breakingnews-web.itheima.net/api/login",
+            url: "/api/login",
             method: "POST",
             data: $(this).serialize(),  //jquery快速拿$("#form_login")表单的数据
             success: function (res) {
@@ -63,7 +63,8 @@ $(function () {
                     return layer.msg("登录失败！");
                 }
                 console.log(res.token);
-                return layer.msg("登录成功！");
+                localStorage.setItem('token', res.token);//将登录成功得到的 token 字符串，保存到 localStorage 中
+                layer.msg("登录成功！");
                 //跳转到后台主页
                 location.href = 'index.html';
             }
